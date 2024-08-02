@@ -1,18 +1,16 @@
 import {createContext, useContext, useEffect, useState} from 'react';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import {jwtDecode} from 'jwt-decode';
 
 // types
 type userContextProviderProps = {
   children: React.ReactNode;
 };
 
-type UserType = {
-  email: string;
-};
-
 // =====================
 type LoginAction = {
   type: 'LOGIN';
-  payload: {user: UserType; accessToken: string | null};
+  payload: {accessToken: string};
 };
 
 type LogoutAction = {
@@ -23,7 +21,7 @@ type UpdateUserDataType = LoginAction | LogoutAction;
 // =====================
 
 type UserContextType = {
-  user: UserType | null;
+  userId: string | null;
   accessToken: string | null;
   updateUserData: (action: UpdateUserDataType) => Promise<void>;
 };
@@ -33,24 +31,42 @@ export const UserContext = createContext<UserContextType>(
 );
 
 export const UserContextProvider = ({children}: userContextProviderProps) => {
-  const [user, setUser] = useState<UserType | null>(null);
+  const [userId, setUserId] = useState<string | null>(null);
   const [accessToken, setAccessToken] = useState<string | null>(null);
 
   const updateUserData = async (action: UpdateUserDataType) => {
     switch (action.type) {
       case 'LOGIN':
-        setUser(action.payload.user);
+        const token = action.payload.accessToken;
+        const decodedUserId: {userId: string} = jwtDecode(token);
+
+        await AsyncStorage.setItem('authToken', token);
         setAccessToken(action.payload.accessToken);
+
+        setUserId(decodedUserId.userId);
         break;
       case 'LOGOUT':
-        setUser(null);
+        setUserId(null);
         setAccessToken(null);
         break;
     }
   };
 
+  useEffect(() => {
+    const getUser = async () => {
+      const token = await AsyncStorage.getItem('authToken');
+      if (token) {
+        setAccessToken(token);
+        const decodedUserId: {userId: string} = jwtDecode(token);
+        setUserId(decodedUserId.userId);
+      }
+    };
+
+    getUser();
+  }, []);
+
   return (
-    <UserContext.Provider value={{user, accessToken, updateUserData}}>
+    <UserContext.Provider value={{userId, accessToken, updateUserData}}>
       {children}
     </UserContext.Provider>
   );

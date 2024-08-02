@@ -5,6 +5,7 @@ import {
   KeyboardAvoidingView,
   StyleSheet,
   TouchableOpacity,
+  Alert,
 } from 'react-native';
 import {useState} from 'react';
 
@@ -19,6 +20,7 @@ import CustomButton from '../../components/CustomButton';
 
 // type
 import type {RootStackParamList} from '../../navigation/types';
+import {register} from '../../lib/apiClient';
 
 type RegisterScreenNavigationProp = NativeStackNavigationProp<
   RootStackParamList,
@@ -30,7 +32,25 @@ const RegisterScreen = () => {
   const [name, setName] = useState('');
   const [password, setPassword] = useState('');
 
+  const [isLogin, setIsLogin] = useState(false);
+
   const navigation = useNavigation<RegisterScreenNavigationProp>();
+
+  const handleRegister = async () => {
+    setIsLogin(true);
+    try {
+      await register({email, name, password});
+      Alert.alert('account created successfully');
+    } catch (error) {
+      console.log('Error registering user', error);
+      Alert.alert('Registering failed');
+    } finally {
+      setEmail('');
+      setName('');
+      setPassword('');
+      setIsLogin(false);
+    }
+  };
 
   return (
     <SafeAreaView style={styles.container}>
@@ -68,7 +88,11 @@ const RegisterScreen = () => {
             placeholderTextColor="#000"
           />
 
-          <CustomButton text="Sign Up" onPress={() => {}} />
+          <CustomButton
+            text={isLogin ? 'Registering...' : 'Sign Up'}
+            onPress={handleRegister}
+            disabled={isLogin}
+          />
 
           <View style={styles.registerBtnContainer}>
             <Text style={{textAlign: 'center', color: 'gray', fontSize: 17}}>

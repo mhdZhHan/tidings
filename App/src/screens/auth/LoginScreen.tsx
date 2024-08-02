@@ -6,12 +6,18 @@ import {
   StyleSheet,
   TouchableOpacity,
 } from 'react-native';
-import {useState} from 'react';
+import {useEffect, useState} from 'react';
 
 import {useNavigation} from '@react-navigation/native';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 
 import IonIcons from 'react-native-vector-icons/Ionicons';
+
+// lib
+import {login} from '../../lib/apiClient';
+
+// contexts
+import {useUserContext} from '../../contexts/UserContext';
 
 // components
 import InputBox from '../../components/InputBox';
@@ -26,10 +32,37 @@ type LoginScreenNavigationProp = NativeStackNavigationProp<
 >;
 
 const LoginScreen = () => {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+  const [email, setEmail] = useState('hello@example.com');
+  const [password, setPassword] = useState('Hello123');
+  const [isLogin, setIsLogin] = useState(false);
+
+  const {updateUserData, accessToken} = useUserContext();
 
   const navigation = useNavigation<LoginScreenNavigationProp>();
+
+  // useEffect(() => {
+  //   if (accessToken) {
+  //     navigation.replace('BottomTabs', {screen: 'Chats'});
+  //   }
+  // }, [accessToken, navigation]);
+
+  const handleLogin = async () => {
+    setIsLogin(true);
+    try {
+      const response = await login({email, password});
+      const token = response.access_token;
+      updateUserData({
+        type: 'LOGIN',
+        payload: {accessToken: token},
+      });
+      navigation.replace('BottomTabs', {screen: 'Chats'});
+    } catch (error) {
+    } finally {
+      setEmail('');
+      setPassword('');
+      setIsLogin(false);
+    }
+  };
 
   return (
     <SafeAreaView style={styles.container}>
@@ -59,7 +92,7 @@ const LoginScreen = () => {
             placeholderTextColor="#000"
           />
 
-          <CustomButton text="Login" onPress={() => {}} />
+          <CustomButton text="Login" onPress={handleLogin} />
 
           <View style={styles.registerBtnContainer}>
             <Text style={{textAlign: 'center', color: 'gray', fontSize: 17}}>

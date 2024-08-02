@@ -3,14 +3,16 @@ import {Text, TouchableOpacity, StyleSheet} from 'react-native';
 type CustomButtonProps = {
   text: string;
   onPress: () => void;
+  disabled?: boolean;
 };
 
-const CustomButton = ({text, onPress}: CustomButtonProps) => {
+const CustomButton = ({text, onPress, disabled}: CustomButtonProps) => {
   return (
     <TouchableOpacity
-      style={styles.button}
+      style={[styles.button, disabled && {backgroundColor: '#A9A9A9'}]}
       activeOpacity={0.8}
-      onPress={onPress}>
+      onPress={onPress}
+      disabled={disabled}>
       <Text style={styles.buttonText}>{text}</Text>
     </TouchableOpacity>
   );

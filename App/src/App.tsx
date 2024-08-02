@@ -14,13 +14,13 @@ const App = () => {
   return (
     <NavigationContainer>
       <Stack.Navigator>
-        <Stack.Screen
-          name="Main"
+        {/* <Stack.Screen
+          name="BottomTabs"
           component={TabNavigator}
           options={{headerShown: false}}
-        />
+        /> */}
         <Stack.Screen
-          name="BottomTabs"
+          name="Main"
           component={StackNavigator}
           options={{headerShown: false}}
         />

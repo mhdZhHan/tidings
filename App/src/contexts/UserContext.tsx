@@ -1,65 +1,56 @@
 import {createContext, useContext, useEffect, useState} from 'react';
-import {useNavigation} from '@react-navigation/native';
 
-// lib
-import {clearStorage, getStorage, setStorage} from '../lib/asyncStorageHelpers';
-
-// type
-import type {UserType} from '../types/User.type';
-
-type UserContextProviderProps = {
+// types
+type userContextProviderProps = {
   children: React.ReactNode;
 };
 
-type LoginAction = {type: 'LOGIN'; payload: UserType};
+type UserType = {
+  email: string;
+};
 
-type LogoutAction = {type: 'LOGOUT'};
+// =====================
+type LoginAction = {
+  type: 'LOGIN';
+  payload: {user: UserType; accessToken: string | null};
+};
 
-type UpdateUserDataActionType = LoginAction | LogoutAction;
+type LogoutAction = {
+  type: 'LOGOUT';
+};
+
+type UpdateUserDataType = LoginAction | LogoutAction;
+// =====================
 
 type UserContextType = {
   user: UserType | null;
-  setUser: React.Dispatch<React.SetStateAction<UserType | null>>;
-  updateUserData: (action: UpdateUserDataActionType) => Promise<void>;
+  accessToken: string | null;
+  updateUserData: (action: UpdateUserDataType) => Promise<void>;
 };
 
-export const UserContext = createContext({} as UserContextType);
+export const UserContext = createContext<UserContextType>(
+  {} as UserContextType,
+);
 
-export const UserContextProvider = ({children}: UserContextProviderProps) => {
-  const navigation = useNavigation();
-
+export const UserContextProvider = ({children}: userContextProviderProps) => {
   const [user, setUser] = useState<UserType | null>(null);
+  const [accessToken, setAccessToken] = useState<string | null>(null);
 
-  const updateUserData = async (action: UpdateUserDataActionType) => {
+  const updateUserData = async (action: UpdateUserDataType) => {
     switch (action.type) {
-      case 'LOGOUT':
-        //
-        await clearStorage();
-        setUser(null);
-        break;
       case 'LOGIN':
-        setUser(action?.payload);
-        await setStorage<UserType>('user', action.payload);
+        setUser(action.payload.user);
+        setAccessToken(action.payload.accessToken);
         break;
-      default:
-        return;
+      case 'LOGOUT':
+        setUser(null);
+        setAccessToken(null);
+        break;
     }
   };
 
-  useEffect(() => {
-    getStorage<UserType>('user')
-      .then(data => {
-        if (data) {
-          setUser(data);
-        } else {
-          setUser(null);
-        }
-      })
-      .catch(error => setUser(null));
-  }, []);
-
   return (
-    <UserContext.Provider value={{user, setUser, updateUserData}}>
+    <UserContext.Provider value={{user, accessToken, updateUserData}}>
       {children}
     </UserContext.Provider>
   );

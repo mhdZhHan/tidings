@@ -1,8 +1,5 @@
 import axios from 'axios';
 
-// types
-import type {UserType} from '../types/User.type';
-
 // Axios instance
 const apiClient = axios.create({
   baseURL: 'http://localhost:3000',
@@ -23,9 +20,15 @@ const setAuthToken = (token: string | null) => {
 // API call: Get User Data
 
 // API call: Login
-export const login = async (credentials: UserType) => {
+export const login = async ({
+  email,
+  password,
+}: {
+  email: string;
+  password: string;
+}) => {
   try {
-    const response = await apiClient.post('/login', credentials);
+    const response = await apiClient.post('/login', {email, password});
     setAuthToken(response.data.token);
     return response.data;
   } catch (error) {
@@ -36,9 +39,17 @@ export const login = async (credentials: UserType) => {
 
 // API call: Register
 
-export const register = async (credentials: UserType) => {
+export const register = async ({
+  email,
+  name,
+  password,
+}: {
+  email: string;
+  name: string;
+  password: string;
+}) => {
   try {
-    const response = await apiClient.post('/register', credentials);
+    const response = await apiClient.post('/register', {email, name, password});
     setAuthToken(response.data.token);
     return response.data;
   } catch (error) {

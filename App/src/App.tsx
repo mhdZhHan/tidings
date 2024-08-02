@@ -1,15 +1,15 @@
 import {NavigationContainer} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 
-// context
-import {UserContextProvider} from './contexts/UserContext';
-
 // types
 import {RootStackParamList} from './navigation/types';
 
 // navigators
 import StackNavigator from './navigation/MainNavigator';
 import TabNavigator from './navigation/TabNavigator';
+
+// contexts
+import {UserContextProvider} from './contexts/UserContext';
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
 

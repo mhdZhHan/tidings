@@ -1,6 +1,9 @@
 import {NavigationContainer} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 
+// context
+import {UserContextProvider} from './contexts/UserContext';
+
 // types
 import {RootStackParamList} from './navigation/types';
 
@@ -12,20 +15,22 @@ const Stack = createNativeStackNavigator<RootStackParamList>();
 
 const App = () => {
   return (
-    <NavigationContainer>
-      <Stack.Navigator>
-        {/* <Stack.Screen
+    <UserContextProvider>
+      <NavigationContainer>
+        <Stack.Navigator>
+          {/* <Stack.Screen
           name="BottomTabs"
           component={TabNavigator}
           options={{headerShown: false}}
         /> */}
-        <Stack.Screen
-          name="Main"
-          component={StackNavigator}
-          options={{headerShown: false}}
-        />
-      </Stack.Navigator>
-    </NavigationContainer>
+          <Stack.Screen
+            name="Main"
+            component={StackNavigator}
+            options={{headerShown: false}}
+          />
+        </Stack.Navigator>
+      </NavigationContainer>
+    </UserContextProvider>
   );
 };
 

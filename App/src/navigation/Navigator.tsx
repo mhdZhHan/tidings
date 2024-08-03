@@ -31,14 +31,11 @@ const Navigator = () => {
 
   function BottomTabs() {
     return (
-      <Tab.Navigator>
+      <Tab.Navigator screenOptions={{tabBarStyle: {backgroundColor: '#000'}}}>
         <Tab.Screen
           name="Chat"
           component={ChatsScreen}
           options={{
-            tabBarStyle: {
-              backgroundColor: '#101010',
-            },
             headerShown: false,
             tabBarShowLabel: false,
             tabBarIcon: ({focused}) =>
@@ -53,9 +50,6 @@ const Navigator = () => {
           name="Profile"
           component={ProfileScreen}
           options={{
-            tabBarStyle: {
-              backgroundColor: '#101010',
-            },
             headerShown: false,
             tabBarShowLabel: false,
             tabBarIcon: ({focused}) =>

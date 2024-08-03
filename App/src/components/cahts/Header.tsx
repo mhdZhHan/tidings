@@ -1,8 +1,17 @@
 import {View, Text, StyleSheet, TouchableOpacity} from 'react-native';
+import {useNavigation} from '@react-navigation/native';
 
 import FontAwesome6 from 'react-native-vector-icons/FontAwesome6';
 
+// types
+import type {NativeStackNavigationProp} from '@react-navigation/native-stack';
+import type {MainStackParamList} from '../../navigation/types';
+
+type MainStackNavigationProp = NativeStackNavigationProp<MainStackParamList>;
+
 const Header = () => {
+  const navigation = useNavigation<MainStackNavigationProp>();
+
   return (
     <View style={styles.headerContainer}>
       <View
@@ -29,7 +38,9 @@ const Header = () => {
 
       <View style={{flex: 1, alignItems: 'flex-end'}}>
         <View style={{flexDirection: 'row', alignItems: 'center', gap: 20}}>
-          <TouchableOpacity activeOpacity={0.5}>
+          <TouchableOpacity
+            activeOpacity={0.5}
+            onPress={() => navigation.navigate('Notifications')}>
             <FontAwesome6
               name="heart"
               size={22}
@@ -38,7 +49,9 @@ const Header = () => {
             />
           </TouchableOpacity>
 
-          <TouchableOpacity activeOpacity={0.5}>
+          <TouchableOpacity
+            activeOpacity={0.5}
+            onPress={() => navigation.navigate('Contacts')}>
             <FontAwesome6 name="user-group" size={20} color="#000" />
           </TouchableOpacity>
         </View>

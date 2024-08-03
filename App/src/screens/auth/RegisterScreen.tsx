@@ -10,7 +10,6 @@ import {
 import {useState} from 'react';
 
 import {useNavigation} from '@react-navigation/native';
-import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 
 import IonIcons from 'react-native-vector-icons/Ionicons';
 
@@ -21,10 +20,11 @@ import CustomButton from '../../components/CustomButton';
 // lib
 import {register} from '../../lib/apiClient';
 
-// type
-import type {AuthStackParamList} from '../../navigation/AuthNavigator';
+// types
+import type {NativeStackNavigationProp} from '@react-navigation/native-stack';
+import type {AuthStackParamList} from '../../navigation/types';
 
-type NavigationProp = NativeStackNavigationProp<AuthStackParamList, 'Login'>;
+type AuthStackNavigationProps = NativeStackNavigationProp<AuthStackParamList>;
 
 const RegisterScreen = () => {
   const [email, setEmail] = useState('');
@@ -33,7 +33,7 @@ const RegisterScreen = () => {
 
   const [isLogin, setIsLogin] = useState(false);
 
-  const navigation = useNavigation<NavigationProp>();
+  const navigation = useNavigation<AuthStackNavigationProps>();
 
   const handleRegister = async () => {
     setIsLogin(true);

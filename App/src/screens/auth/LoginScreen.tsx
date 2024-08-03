@@ -8,8 +8,7 @@ import {
 } from 'react-native';
 import {useEffect, useState} from 'react';
 
-import {CompositeNavigationProp, useNavigation} from '@react-navigation/native';
-import {NativeStackNavigationProp} from '@react-navigation/native-stack';
+import {useNavigation} from '@react-navigation/native';
 
 import IonIcons from 'react-native-vector-icons/Ionicons';
 
@@ -23,27 +22,29 @@ import {useUserContext} from '../../contexts/UserContext';
 import InputBox from '../../components/InputBox';
 import CustomButton from '../../components/CustomButton';
 
-// type
-import type {AuthStackParamList} from '../../navigation/AuthNavigator';
-import type {RootStackParamList} from '../../navigation/RootNavigator';
+// types
+import type {NativeStackNavigationProp} from '@react-navigation/native-stack';
+import type {
+  MainStackParamList,
+  AuthStackParamList,
+} from '../../navigation/types';
 
-type LoginScreenNavigationProp = CompositeNavigationProp<
-  NativeStackNavigationProp<AuthStackParamList, 'Login'>,
-  NativeStackNavigationProp<RootStackParamList>
->;
+type AuthStackNavigationProp = NativeStackNavigationProp<AuthStackParamList>;
+type MainStackNavigationProp = AuthStackNavigationProp &
+  NativeStackNavigationProp<MainStackParamList>;
 
 const LoginScreen = () => {
-  const [email, setEmail] = useState('hello@example.com');
-  const [password, setPassword] = useState('Hello123');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
   const [isLogin, setIsLogin] = useState(false);
 
   const {updateUserData, accessToken} = useUserContext();
 
-  const navigation = useNavigation<LoginScreenNavigationProp>();
+  const navigation = useNavigation<MainStackNavigationProp>();
 
   useEffect(() => {
     if (accessToken) {
-      navigation.replace('App');
+      navigation.replace('BottomTabs');
     }
   }, [accessToken, navigation]);
 

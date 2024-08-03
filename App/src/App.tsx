@@ -1,4 +1,4 @@
-import RootNavigator from './navigation/RootNavigator';
+import Navigator from './navigation/Navigator';
 
 // contexts
 import {UserContextProvider} from './contexts/UserContext';
@@ -6,7 +6,7 @@ import {UserContextProvider} from './contexts/UserContext';
 const App = () => {
   return (
     <UserContextProvider>
-      <RootNavigator />
+      <Navigator />
     </UserContextProvider>
   );
 };

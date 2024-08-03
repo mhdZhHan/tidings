@@ -21,7 +21,7 @@ import {useFetch} from '../../hooks/useFetch';
 // types
 import type {UserType} from '../../types';
 
-const Users = () => {
+const UsersScreen = () => {
   const [refreshing, setRefreshing] = useState(false);
   const {userId} = useUserContext();
 
@@ -69,7 +69,7 @@ const Users = () => {
   );
 };
 
-export default Users;
+export default UsersScreen;
 
 const styles = StyleSheet.create({
   container: {

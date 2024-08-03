@@ -9,7 +9,7 @@ import ChatsScreen from '../screens/main/ChatsScreen';
 import ProfileScreen from '../screens/main/ProfileScreen';
 import LoginScreen from '../screens/auth/LoginScreen';
 import RegisterScreen from '../screens/auth/RegisterScreen';
-import Users from '../screens/main/Users';
+import UsersScreen from '../screens/main/UsersScreen';
 import Notifications from '../screens/main/Notifications';
 
 // contexts
@@ -95,7 +95,7 @@ const Navigator = () => {
         />
         <Stack.Screen
           name="Users"
-          component={Users}
+          component={UsersScreen}
           options={{headerShown: false}}
         />
         <Stack.Screen

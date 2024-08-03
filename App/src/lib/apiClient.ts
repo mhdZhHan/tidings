@@ -62,7 +62,7 @@ export const register = async ({
 export const getUsers = async (userId: string): Promise<UserType[]> => {
   try {
     const response = await apiClient.get(`/users/${userId}`);
-    return response.data; // Ensure the function returns the actual data
+    return response.data.users; // Ensure the function returns the actual data
   } catch (error) {
     console.error('Error fetching users:', error);
     throw error;

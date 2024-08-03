@@ -20,7 +20,7 @@ import {useUserContext} from '../../contexts/UserContext';
 
 // components
 import InputBox from '../../components/InputBox';
-import CustomButton from '../../components/CustomButton';
+import CustomButton from '../../components/buttons/CustomButton';
 
 // types
 import type {NativeStackNavigationProp} from '@react-navigation/native-stack';

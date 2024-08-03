@@ -1,15 +1,23 @@
 import {View, Text, StyleSheet, Image, TouchableOpacity} from 'react-native';
-import AntDesign from 'react-native-vector-icons/AntDesign';
 
 // components
 import RectButton from '../buttons/RectButton';
 
-const RequestCard = () => {
+// types
+import type {UserType} from '../../types';
+
+type UserCardProps = {
+  item: UserType;
+};
+
+const UserCard = ({item}: UserCardProps) => {
   return (
-    <TouchableOpacity activeOpacity={0.8} style={styles.reqCard}>
+    <TouchableOpacity activeOpacity={0.8} style={styles.userCard}>
       <View style={styles.cardLeft}>
         <Image
-          source={require('../../assets/avatar.jpg')}
+          source={
+            item.image ? {uri: item.image} : require('../../assets/avatar.jpg')
+          }
           resizeMode="cover"
           style={{
             width: 40,
@@ -25,7 +33,7 @@ const RequestCard = () => {
               fontWeight: '700',
               marginBottom: 2,
             }}>
-            Mohammed
+            {item.name}
           </Text>
           <Text
             style={{
@@ -33,31 +41,21 @@ const RequestCard = () => {
               fontWeight: '500',
               color: '#333',
             }}>
-            Chat with Mohammed
+            {/* username future */}
+            Chat with {item.name}
           </Text>
         </View>
       </View>
 
-      <View
-        style={{
-          flexDirection: 'row',
-          alignItems: 'center',
-          gap: 20,
-        }}>
-        <RectButton text="Accept" onPress={() => {}} />
-
-        <TouchableOpacity activeOpacity={0.5}>
-          <AntDesign name="closecircle" size={24} color="#000" />
-        </TouchableOpacity>
-      </View>
+      <RectButton text="Chat" onPress={() => {}} />
     </TouchableOpacity>
   );
 };
 
-export default RequestCard;
+export default UserCard;
 
 const styles = StyleSheet.create({
-  reqCard: {
+  userCard: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',

@@ -9,7 +9,7 @@ import {
 
 // components
 import UsersHeader from '../../components/users/UsersHeader';
-import ContactCard from '../../components/cards/ContactCard';
+import UserCard from '../../components/cards/UserCard';
 
 // lib
 import {getUsers} from '../../lib/apiClient';
@@ -63,7 +63,7 @@ const UsersScreen = () => {
             <UsersHeader />
           </>
         }
-        renderItem={({item}) => <ContactCard />}
+        renderItem={({item}) => <UserCard item={item} />}
       />
     </SafeAreaView>
   );

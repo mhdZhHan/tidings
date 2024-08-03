@@ -15,7 +15,7 @@ import IonIcons from 'react-native-vector-icons/Ionicons';
 
 // components
 import InputBox from '../../components/InputBox';
-import CustomButton from '../../components/CustomButton';
+import CustomButton from '../../components/buttons/CustomButton';
 
 // lib
 import {register} from '../../lib/apiClient';

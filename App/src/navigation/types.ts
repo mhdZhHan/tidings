@@ -5,7 +5,7 @@ export type AuthStackParamList = {
 
 export type MainStackParamList = {
   BottomTabs: undefined;
-  Contacts: undefined;
+  Users: undefined;
   Notifications: undefined;
 };
 

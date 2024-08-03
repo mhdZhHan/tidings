@@ -6,15 +6,15 @@ import {
   ScrollView,
   TouchableOpacity,
 } from 'react-native';
-import Header from '../../components/cahts/Header';
-import ChatsCard from '../../components/cahts/ChatsCard';
-import RequestCard from '../../components/cahts/RequestCard';
+import ChatsHeader from '../../components/chats/ChatsHeader';
+import ChatsCard from '../../components/cards/ChatsCard';
+import RequestCard from '../../components/cards/RequestCard';
 
 const ChatsScreen = () => {
   return (
     <SafeAreaView style={styles.container}>
       <ScrollView>
-        <Header />
+        <ChatsHeader />
 
         <View style={{flex: 1, marginVertical: 20}}>
           <ChatsCard />

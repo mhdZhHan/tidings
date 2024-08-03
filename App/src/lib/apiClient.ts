@@ -1,5 +1,8 @@
 import axios from 'axios';
 
+// types
+import type {UserType} from '../types';
+
 // Axios instance
 const apiClient = axios.create({
   baseURL: 'http://192.168.1.75:3000',
@@ -16,8 +19,6 @@ const setAuthToken = (token: string | null) => {
     delete apiClient.defaults.headers.common['Authorization'];
   }
 };
-
-// API call: Get User Data
 
 // API call: Login
 export const login = async ({
@@ -38,7 +39,6 @@ export const login = async ({
 };
 
 // API call: Register
-
 export const register = async ({
   email,
   name,
@@ -54,6 +54,17 @@ export const register = async ({
     return response.data;
   } catch (error) {
     console.error('Error logging in:', error);
+    throw error;
+  }
+};
+
+// API call: fetch users
+export const getUsers = async (userId: string): Promise<UserType[]> => {
+  try {
+    const response = await apiClient.get(`/users/${userId}`);
+    return response.data; // Ensure the function returns the actual data
+  } catch (error) {
+    console.error('Error fetching users:', error);
     throw error;
   }
 };

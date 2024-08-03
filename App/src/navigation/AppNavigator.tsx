@@ -22,11 +22,12 @@ const AppNavigator = () => {
         options={{
           tabBarStyle: {backgroundColor: '#101010'},
           headerShown: false,
+          tabBarShowLabel: false,
           tabBarIcon: ({focused}) =>
             focused ? (
-              <IonIcons name="chatbubble-outline" color="#fff" />
+              <IonIcons size={28} name="chatbubble-outline" color="#fff" />
             ) : (
-              <IonIcons name="chatbubble-outline" color="#999" />
+              <IonIcons size={28} name="chatbubble-outline" color="#999" />
             ),
         }}
       />
@@ -36,11 +37,12 @@ const AppNavigator = () => {
         options={{
           tabBarStyle: {backgroundColor: '#101010'},
           headerShown: false,
+          tabBarShowLabel: false,
           tabBarIcon: ({focused}) =>
             focused ? (
-              <IonIcons name="person-circle-sharp" color="#fff" />
+              <IonIcons size={28} name="person-circle-sharp" color="#fff" />
             ) : (
-              <IonIcons name="person-circle-sharp" color="#999" />
+              <IonIcons size={28} name="person-circle-sharp" color="#999" />
             ),
         }}
       />

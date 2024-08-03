@@ -18,14 +18,13 @@ import IonIcons from 'react-native-vector-icons/Ionicons';
 import InputBox from '../../components/InputBox';
 import CustomButton from '../../components/CustomButton';
 
-// type
-import type {RootStackParamList} from '../../navigation/types';
+// lib
 import {register} from '../../lib/apiClient';
 
-type RegisterScreenNavigationProp = NativeStackNavigationProp<
-  RootStackParamList,
-  'Main'
->;
+// type
+import type {AuthStackParamList} from '../../navigation/AuthNavigator';
+
+type NavigationProp = NativeStackNavigationProp<AuthStackParamList, 'Login'>;
 
 const RegisterScreen = () => {
   const [email, setEmail] = useState('');
@@ -34,7 +33,7 @@ const RegisterScreen = () => {
 
   const [isLogin, setIsLogin] = useState(false);
 
-  const navigation = useNavigation<RegisterScreenNavigationProp>();
+  const navigation = useNavigation<NavigationProp>();
 
   const handleRegister = async () => {
     setIsLogin(true);
@@ -100,7 +99,7 @@ const RegisterScreen = () => {
             </Text>
             <TouchableOpacity
               activeOpacity={0.8}
-              onPress={() => navigation.navigate('Main', {screen: 'Login'})}>
+              onPress={() => navigation.navigate('Login')}>
               <Text
                 style={{
                   fontSize: 17,

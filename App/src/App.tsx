@@ -1,35 +1,12 @@
-import {NavigationContainer} from '@react-navigation/native';
-import {createNativeStackNavigator} from '@react-navigation/native-stack';
-
-// types
-import {RootStackParamList} from './navigation/types';
-
-// navigators
-import StackNavigator from './navigation/MainNavigator';
-import TabNavigator from './navigation/TabNavigator';
+import RootNavigator from './navigation/RootNavigator';
 
 // contexts
 import {UserContextProvider} from './contexts/UserContext';
 
-const Stack = createNativeStackNavigator<RootStackParamList>();
-
 const App = () => {
   return (
     <UserContextProvider>
-      <NavigationContainer>
-        <Stack.Navigator>
-          {/* <Stack.Screen
-          name="BottomTabs"
-          component={TabNavigator}
-          options={{headerShown: false}}
-        /> */}
-          <Stack.Screen
-            name="Main"
-            component={StackNavigator}
-            options={{headerShown: false}}
-          />
-        </Stack.Navigator>
-      </NavigationContainer>
+      <RootNavigator />
     </UserContextProvider>
   );
 };

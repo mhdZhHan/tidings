@@ -6,15 +6,17 @@ import IonIcons from 'react-native-vector-icons/Ionicons';
 import ChatsScreen from '../screens/main/ChatsScreen';
 import ProfileScreen from '../screens/main/ProfileScreen';
 
-// types
-import {TabParamList} from './types';
+export type AppTabParamList = {
+  Chats: undefined;
+  Profile: undefined;
+};
 
-const TabNavigator = () => {
-  const Tab = createBottomTabNavigator<TabParamList>();
+const AppTab = createBottomTabNavigator<AppTabParamList>();
 
+const AppNavigator = () => {
   return (
-    <Tab.Navigator>
-      <Tab.Screen
+    <AppTab.Navigator>
+      <AppTab.Screen
         name="Chats"
         component={ChatsScreen}
         options={{
@@ -28,7 +30,7 @@ const TabNavigator = () => {
             ),
         }}
       />
-      <Tab.Screen
+      <AppTab.Screen
         name="Profile"
         component={ProfileScreen}
         options={{
@@ -42,8 +44,8 @@ const TabNavigator = () => {
             ),
         }}
       />
-    </Tab.Navigator>
+    </AppTab.Navigator>
   );
 };
 
-export default TabNavigator;
+export default AppNavigator;

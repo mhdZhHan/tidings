@@ -8,7 +8,7 @@ import {
 } from 'react-native';
 import {useEffect, useState} from 'react';
 
-import {useNavigation} from '@react-navigation/native';
+import {CompositeNavigationProp, useNavigation} from '@react-navigation/native';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 
 import IonIcons from 'react-native-vector-icons/Ionicons';
@@ -24,11 +24,12 @@ import InputBox from '../../components/InputBox';
 import CustomButton from '../../components/CustomButton';
 
 // type
-import type {RootStackParamList} from '../../navigation/types';
+import type {AuthStackParamList} from '../../navigation/AuthNavigator';
+import type {RootStackParamList} from '../../navigation/RootNavigator';
 
-type LoginScreenNavigationProp = NativeStackNavigationProp<
-  RootStackParamList,
-  'Main'
+type LoginScreenNavigationProp = CompositeNavigationProp<
+  NativeStackNavigationProp<AuthStackParamList, 'Login'>,
+  NativeStackNavigationProp<RootStackParamList>
 >;
 
 const LoginScreen = () => {
@@ -40,11 +41,11 @@ const LoginScreen = () => {
 
   const navigation = useNavigation<LoginScreenNavigationProp>();
 
-  // useEffect(() => {
-  //   if (accessToken) {
-  //     navigation.replace('BottomTabs', {screen: 'Chats'});
-  //   }
-  // }, [accessToken, navigation]);
+  useEffect(() => {
+    if (accessToken) {
+      navigation.replace('App');
+    }
+  }, [accessToken, navigation]);
 
   const handleLogin = async () => {
     setIsLogin(true);
@@ -55,7 +56,6 @@ const LoginScreen = () => {
         type: 'LOGIN',
         payload: {accessToken: token},
       });
-      navigation.replace('BottomTabs', {screen: 'Chats'});
     } catch (error) {
     } finally {
       setEmail('');
@@ -92,7 +92,11 @@ const LoginScreen = () => {
             placeholderTextColor="#000"
           />
 
-          <CustomButton text="Login" onPress={handleLogin} />
+          <CustomButton
+            text={isLogin ? 'Login...' : 'Login'}
+            disabled={isLogin}
+            onPress={handleLogin}
+          />
 
           <View style={styles.registerBtnContainer}>
             <Text style={{textAlign: 'center', color: 'gray', fontSize: 17}}>
@@ -100,7 +104,7 @@ const LoginScreen = () => {
             </Text>
             <TouchableOpacity
               activeOpacity={0.8}
-              onPress={() => navigation.navigate('Main', {screen: 'Register'})}>
+              onPress={() => navigation.navigate('Register')}>
               <Text
                 style={{
                   fontSize: 17,

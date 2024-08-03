@@ -148,7 +148,7 @@ app.post("/login", async (req: Request, res: Response) => {
 app.get("/users/:userId", async (req: Request, res: Response) => {
 	try {
 		const userId = req.params.userId
-		const users = await User.find({ _Id: { $ne: userId } })
+		const users = await User.find({ _id: { $ne: userId } })
 
 		res.status(200).json({
 			users,

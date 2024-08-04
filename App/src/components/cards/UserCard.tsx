@@ -1,16 +1,23 @@
 import {View, Text, StyleSheet, Image, TouchableOpacity} from 'react-native';
+import {useNavigation} from '@react-navigation/native';
 
 // components
 import RectButton from '../buttons/RectButton';
 
 // types
+import type {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import type {UserType} from '../../types';
+import type {MainStackParamList} from '../../navigation/types';
+
+type MainStackNavigationProp = NativeStackNavigationProp<MainStackParamList>;
 
 type UserCardProps = {
   item: UserType;
 };
 
 const UserCard = ({item}: UserCardProps) => {
+  const navigation = useNavigation<MainStackNavigationProp>();
+
   return (
     <TouchableOpacity activeOpacity={0.8} style={styles.userCard}>
       <View style={styles.cardLeft}>
@@ -47,7 +54,16 @@ const UserCard = ({item}: UserCardProps) => {
         </View>
       </View>
 
-      <RectButton text="Chat" onPress={() => {}} />
+      <RectButton
+        text="Chat"
+        onPress={() =>
+          navigation.navigate('ChatRoom', {
+            name: item?.name as string,
+            receiverId: item?._id as string,
+            image: item?.image as string,
+          })
+        }
+      />
     </TouchableOpacity>
   );
 };
@@ -63,6 +79,7 @@ const styles = StyleSheet.create({
 
     paddingVertical: 10,
     paddingHorizontal: 20,
+    borderBottomWidth: 1,
   },
   cardLeft: {
     flexDirection: 'row',

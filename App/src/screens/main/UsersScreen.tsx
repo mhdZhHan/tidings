@@ -37,8 +37,6 @@ const UsersScreen = () => {
     setRefreshing(false);
   };
 
-  console.log('Hello', users);
-
   return (
     <SafeAreaView style={styles.container}>
       <FlatList

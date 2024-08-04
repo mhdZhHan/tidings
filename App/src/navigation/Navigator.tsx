@@ -11,6 +11,7 @@ import LoginScreen from '../screens/auth/LoginScreen';
 import RegisterScreen from '../screens/auth/RegisterScreen';
 import UsersScreen from '../screens/main/UsersScreen';
 import Notifications from '../screens/main/Notifications';
+import ChatRoom from '../screens/main/ChatRoom';
 
 // contexts
 import {useUserContext} from '../contexts/UserContext';
@@ -103,6 +104,7 @@ const Navigator = () => {
           component={Notifications}
           options={{headerShown: false}}
         />
+        <Stack.Screen name="ChatRoom" component={ChatRoom} />
       </Stack.Navigator>
     );
   }

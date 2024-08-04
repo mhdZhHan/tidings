@@ -18,10 +18,14 @@ import Feather from 'react-native-vector-icons/Feather';
 // contexts
 import {useUserContext} from '../../contexts/UserContext';
 
+// lib
+import {sendChatRequest} from '../../lib/apiClient';
+
 // types
 import type {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import {RouteProp} from '@react-navigation/native';
 import type {MainStackParamList} from '../../navigation/types';
+import {Alert} from 'react-native';
 
 type ChatRoomProps = {
   navigation: NativeStackNavigationProp<MainStackParamList, 'ChatRoom'>;
@@ -32,7 +36,7 @@ const ChatRoom = ({navigation, route}: ChatRoomProps) => {
   const [message, setMessage] = useState('');
   const {accessToken, userId} = useUserContext();
 
-  const {name, receiverId, image} = route.params;
+  const {name: receiverName, receiverId, image} = route.params;
 
   useLayoutEffect(() => {
     return navigation.setOptions({
@@ -69,13 +73,33 @@ const ChatRoom = ({navigation, route}: ChatRoomProps) => {
                 fontSize: 18,
                 fontWeight: '600',
               }}>
-              {name}
+              {receiverName}
             </Text>
           </TouchableOpacity>
         </>
       ),
     });
   }, []);
+
+  const handleSend = async () => {
+    if (!userId || !receiverId || !message.length) {
+      return Alert.alert('Something went wrong', 'Please try again');
+    }
+
+    const {status} = await sendChatRequest({
+      userId: userId,
+      message: message,
+      receiverId: receiverId,
+    });
+
+    if (status === 200) {
+      setMessage('');
+      return Alert.alert(
+        'Chat Request Sent',
+        `Your chat request has been sent to ${receiverName}. Please wait for them to accept.`,
+      );
+    }
+  };
 
   return (
     <KeyboardAvoidingView style={styles.container}>
@@ -107,6 +131,7 @@ const ChatRoom = ({navigation, route}: ChatRoomProps) => {
 
         <TouchableOpacity
           activeOpacity={0.5}
+          onPress={handleSend}
           style={{
             backgroundColor: '#000',
             paddingHorizontal: 12,

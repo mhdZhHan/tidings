@@ -69,6 +69,29 @@ export const getUsers = async (userId: string): Promise<UserType[]> => {
   }
 };
 
+// API call: send chat request
+export const sendChatRequest = async ({
+  userId,
+  receiverId,
+  message,
+}: {
+  userId: string;
+  receiverId: string;
+  message: string;
+}) => {
+  try {
+    const response = await apiClient.post('/send-request', {
+      senderId: userId,
+      receiverId,
+      message,
+    });
+    return {status: response.status};
+  } catch (error) {
+    console.error('Error fetching users:', error);
+    throw error;
+  }
+};
+
 // API call: Logout
 export const logout = () => {
   setAuthToken(null);

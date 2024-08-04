@@ -148,6 +148,8 @@ app.post("/login", async (req: Request, res: Response) => {
 app.get("/users/:userId", async (req: Request, res: Response) => {
 	try {
 		const userId = req.params.userId
+
+		// Find all users except the one with the specified userId
 		const users = await User.find({ _id: { $ne: userId } })
 
 		res.status(200).json({
@@ -162,16 +164,42 @@ app.get("/users/:userId", async (req: Request, res: Response) => {
 	}
 })
 
+/**
+ * POST /send-request
+ *
+ * Sends a chat request from one user to another.
+ *
+ * Request Body:
+ * - senderId: The ID of the user sending the request.
+ * - receiverId: The ID of the user receiving the request.
+ * - message: The message to be included with the request.
+ *
+ * Response:
+ * - 200: A success message indicating the request was sent successfully.
+ * - 404: An error message indicating that the receiver was not found.
+ * - 500: An error message indicating a server error occurred while sending the request.
+ */
 app.post("/send-request", async (req: Request, res: Response) => {
-	const { senderId, receiverId, message } = req.body
+	try {
+		const { senderId, receiverId, message } = req.body
 
-	const receiver = await User.findById(receiverId)
-	if (!receiver) {
-		return res.status(404).json({ message: "Receiver not found" })
+		// Find the receiver user by ID
+		const receiver = await User.findById(receiverId)
+		if (!receiver) {
+			return res.status(404).json({ message: "Receiver not found" })
+		}
+
+		// Add the request to the receiver's requests array
+		receiver.requests.push({
+			from: senderId,
+			message: message,
+		})
+		await receiver.save()
+
+		// Send a success response
+		res.status(200).json({ message: "Request sent Successfully" })
+	} catch (error) {
+		console.log("Error sending request", error)
+		res.status(500).json({ message: "Error sending request", error: error })
 	}
-
-	receiver.requests.push({ from: senderId, message })
-	await receiver.save()
-
-	res.status(200).json({ message: "Request sent Successfully" })
 })

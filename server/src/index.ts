@@ -203,3 +203,100 @@ app.post("/send-request", async (req: Request, res: Response) => {
 		res.status(500).json({ message: "Error sending request", error: error })
 	}
 })
+
+/**
+ * GET /get-requests/:userId
+ *
+ * Retrieves all friend requests for the specified user.
+ *
+ * Request Params:
+ * - userId: The ID of the user whose requests are to be fetched.
+ *
+ * Response:
+ * - 200: An array of request objects with sender information (name, email).
+ * - 404: A message indicating the user was not found.
+ * - 500: An error message indicating a server error occurred while fetching the requests.
+ */
+app.get("/get-requests/:userId", async (req: Request, res: Response) => {
+	try {
+		const userId = req.params.userId
+
+		// Find the user by ID and populate the 'from' field in requests with the user's name and email
+		const user = await User.findById(userId).populate(
+			"request.from",
+			"name email"
+		)
+
+		if (!user) {
+			return res.status(404).json({
+				message: "User not found",
+			})
+		}
+
+		res.status(200).json(user.requests)
+	} catch (error) {
+		console.log("Error getting request", error)
+		res.status(500).json({ message: "Error getting request", error: error })
+	}
+})
+
+/**
+ * POST /accept-request
+ *
+ * Accepts a friend request by updating the user's friend list and removing the request.
+ *
+ * Request Body:
+ * - userId: The ID of the user accepting the request.
+ * - requestId: The ID of the user who sent the request.
+ *
+ * Response:
+ * - 200: A message indicating the request was accepted successfully.
+ * - 404: A message indicating the user or the request was not found.
+ * - 500: An error message indicating a server error occurred while accepting the request.
+ */
+app.post("/accept-request", async (req: Request, res: Response) => {
+	try {
+		const { userId, requestId } = req.body
+
+		// Find the user who is accepting the request
+		const user = await User.findById(userId)
+
+		if (!user) {
+			return res.status(404).json({
+				message: "User not found",
+			})
+		}
+
+		// Remove the request from the user's request list
+		const updateUser = await User.findByIdAndUpdate(
+			userId,
+			{
+				$pull: { requests: { from: requestId } },
+			},
+			{ new: true }
+		)
+
+		if (!updateUser) {
+			return res.status(404).json({ message: "Request not found" })
+		}
+
+		// Add the request sender to the user's friends list
+		await User.findByIdAndUpdate(userId, {
+			$push: { friends: requestId },
+		})
+
+		// Add the user to the request sender's friends list
+		const friendUser = await User.findByIdAndUpdate(requestId, {
+			$push: { friends: userId },
+		})
+
+		if (!friendUser) {
+			return res.status(404).json({ message: "Receiver not found" })
+		}
+
+		res.status(200).json({ message: "Request accepted successfully" })
+	} catch (error) {
+		console.log("Error getting request", error)
+		res.status(500).json({ message: "Error getting request", error: error })
+	}
+})

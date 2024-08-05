@@ -2,11 +2,14 @@ import Navigator from './navigation/Navigator';
 
 // contexts
 import {UserContextProvider} from './contexts/UserContext';
+import {SocketContextProvider} from './contexts/SocketContext';
 
 const App = () => {
   return (
     <UserContextProvider>
-      <Navigator />
+      <SocketContextProvider>
+        <Navigator />
+      </SocketContextProvider>
     </UserContextProvider>
   );
 };

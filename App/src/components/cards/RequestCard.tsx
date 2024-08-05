@@ -1,15 +1,56 @@
-import {View, Text, StyleSheet, Image, TouchableOpacity} from 'react-native';
+import {
+  View,
+  Text,
+  StyleSheet,
+  Image,
+  TouchableOpacity,
+  Alert,
+} from 'react-native';
 import AntDesign from 'react-native-vector-icons/AntDesign';
+
+// contexts
+import {useUserContext} from '../../contexts/UserContext';
 
 // components
 import RectButton from '../buttons/RectButton';
 
-const RequestCard = () => {
+// lib
+import {acceptFriendRequests} from '../../lib/apiClient';
+
+// types
+import {RequestsType} from '../../types';
+
+type RequestCardProps = {
+  item: RequestsType;
+  refetchChatRequests: () => Promise<void>;
+};
+
+const RequestCard = ({item, refetchChatRequests}: RequestCardProps) => {
+  const {userId} = useUserContext();
+
+  const handleAcceptRequest = async () => {
+    try {
+      const {status} = await acceptFriendRequests(
+        userId as string,
+        item.from._id,
+      );
+
+      if (status === 200) {
+        await refetchChatRequests();
+      }
+    } catch (error) {
+      console.log('Error', error);
+    }
+  };
   return (
-    <TouchableOpacity activeOpacity={0.8} style={styles.reqCard}>
+    <View style={styles.reqCard}>
       <View style={styles.cardLeft}>
         <Image
-          source={require('../../assets/avatar.jpg')}
+          source={
+            item.from.image
+              ? {uri: item.from.image}
+              : require('../../assets/avatar.jpg')
+          }
           resizeMode="cover"
           style={{
             width: 40,
@@ -25,7 +66,7 @@ const RequestCard = () => {
               fontWeight: '700',
               marginBottom: 2,
             }}>
-            Mohammed
+            {item.from.name}
           </Text>
           <Text
             style={{
@@ -33,7 +74,7 @@ const RequestCard = () => {
               fontWeight: '500',
               color: '#333',
             }}>
-            Chat with Mohammed
+            {item.message}
           </Text>
         </View>
       </View>
@@ -42,15 +83,15 @@ const RequestCard = () => {
         style={{
           flexDirection: 'row',
           alignItems: 'center',
-          gap: 20,
+          gap: 18,
         }}>
-        <RectButton text="Accept" onPress={() => {}} />
+        <RectButton text="Accept" onPress={handleAcceptRequest} />
 
         <TouchableOpacity activeOpacity={0.5}>
           <AntDesign name="closecircle" size={24} color="#000" />
         </TouchableOpacity>
       </View>
-    </TouchableOpacity>
+    </View>
   );
 };
 
@@ -65,11 +106,12 @@ const styles = StyleSheet.create({
 
     paddingVertical: 10,
     paddingHorizontal: 20,
+    borderBottomWidth: 1,
   },
   cardLeft: {
     flexDirection: 'row',
     justifyContent: 'flex-start',
     alignItems: 'center',
-    gap: 17,
+    gap: 10,
   },
 });

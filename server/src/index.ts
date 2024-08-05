@@ -223,8 +223,8 @@ app.get("/get-requests/:userId", async (req: Request, res: Response) => {
 
 		// Find the user by ID and populate the 'from' field in requests with the user's name and email
 		const user = await User.findById(userId).populate(
-			"request.from",
-			"name email"
+			"requests.from",
+			"name email image"
 		)
 
 		if (!user) {

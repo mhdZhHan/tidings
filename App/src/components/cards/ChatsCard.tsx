@@ -12,7 +12,7 @@ const ChatCard = () => {
         }}
       />
 
-      <View style={styles.info}>
+      <View>
         <Text
           style={{
             fontSize: 18,
@@ -46,8 +46,6 @@ const styles = StyleSheet.create({
 
     paddingVertical: 10,
     paddingHorizontal: 20,
+    borderBottomWidth: 1,
   },
-  info: {},
-  userName: {},
-  labelText: {},
 });

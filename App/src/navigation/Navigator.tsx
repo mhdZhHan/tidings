@@ -10,7 +10,7 @@ import ProfileScreen from '../screens/main/ProfileScreen';
 import LoginScreen from '../screens/auth/LoginScreen';
 import RegisterScreen from '../screens/auth/RegisterScreen';
 import UsersScreen from '../screens/main/UsersScreen';
-import Notifications from '../screens/main/Notifications';
+import NotificationsScreen from '../screens/main/NotificationsScreen';
 import ChatRoom from '../screens/main/ChatRoom';
 
 // contexts
@@ -101,7 +101,7 @@ const Navigator = () => {
         />
         <Stack.Screen
           name="Notifications"
-          component={Notifications}
+          component={NotificationsScreen}
           options={{headerShown: false}}
         />
         <Stack.Screen name="ChatRoom" component={ChatRoom} />
@@ -111,7 +111,7 @@ const Navigator = () => {
 
   return (
     <NavigationContainer>
-      {accessToken ? <MainStackNavigator /> : <AuthStackNavigator />}
+      {accessToken !== null ? <MainStackNavigator /> : <AuthStackNavigator />}
     </NavigationContainer>
   );
 };

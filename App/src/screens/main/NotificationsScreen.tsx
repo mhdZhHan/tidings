@@ -9,40 +9,40 @@ import {
 } from 'react-native';
 
 // components
-import UsersHeader from '../../components/headers/UsersHeader';
-import UserCard from '../../components/cards/UserCard';
+import NotificationsHeader from '../../components/headers/NotificationsHeader';
+import RequestCard from '../../components/cards/RequestCard';
 
 // lib
-import {getUsers} from '../../lib/apiClient';
+import {getFriendRequests} from '../../lib/apiClient';
 
 // contexts
 import {useUserContext} from '../../contexts/UserContext';
 import {useFetch} from '../../hooks/useFetch';
 
 // types
-import type {UserType} from '../../types';
+import type {RequestsType} from '../../types';
 
-const UsersScreen = () => {
+const NotificationsScreen = () => {
   const [refreshing, setRefreshing] = useState(false);
   const {userId} = useUserContext();
 
   const {
-    data: users,
+    data: chatRequests,
     isLoading,
-    refetch: refetchUsers,
-  } = useFetch<UserType>(() => getUsers(userId as string));
+    refetch: refetchChatRequests,
+  } = useFetch<RequestsType>(() => getFriendRequests(userId as string));
 
   const onRefresh = async () => {
     setRefreshing(true);
-    await refetchUsers();
+    await refetchChatRequests();
     setRefreshing(false);
   };
 
   return (
     <SafeAreaView style={styles.container}>
       <FlatList
-        data={users}
-        keyExtractor={item => item._id as string}
+        data={chatRequests}
+        keyExtractor={item => item._id}
         refreshControl={
           <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
         }
@@ -54,21 +54,23 @@ const UsersScreen = () => {
               fontSize: 18,
               marginTop: 20,
             }}>
-            App Maintenance Please wait some time
+            No notifications found
           </Text>
         }
         ListHeaderComponent={
           <View style={{marginBottom: 10}}>
-            <UsersHeader />
+            <NotificationsHeader />
           </View>
         }
-        renderItem={({item}) => <UserCard item={item} />}
+        renderItem={({item}) => (
+          <RequestCard refetchChatRequests={refetchChatRequests} item={item} />
+        )}
       />
     </SafeAreaView>
   );
 };
 
-export default UsersScreen;
+export default NotificationsScreen;
 
 const styles = StyleSheet.create({
   container: {

@@ -62,7 +62,7 @@ export const register = async ({
 export const getUsers = async (userId: string): Promise<UserType[]> => {
   try {
     const response = await apiClient.get(`/users/${userId}`);
-    return response.data.users; // Ensure the function returns the actual data
+    return response.data.users;
   } catch (error) {
     console.error('Error fetching users:', error);
     throw error;
@@ -84,6 +84,34 @@ export const sendChatRequest = async ({
       senderId: userId,
       receiverId,
       message,
+    });
+    return {status: response.status};
+  } catch (error) {
+    console.error('Error fetching users:', error);
+    throw error;
+  }
+};
+
+// API call: get friend request
+export const getFriendRequests = async (userId: string) => {
+  try {
+    const response = await apiClient.get(`/get-requests/${userId}`);
+    return response.data;
+  } catch (error) {
+    console.error('Error fetching users:', error);
+    throw error;
+  }
+};
+
+// API call: accept friend request
+export const acceptFriendRequests = async (
+  userId: string,
+  requestId: string,
+) => {
+  try {
+    const response = await apiClient.post(`/accept-request/`, {
+      userId,
+      requestId,
     });
     return {status: response.status};
   } catch (error) {

@@ -1,3 +1,3 @@
-import type {UserType} from './UserType';
+import type {UserType, RequestsType} from './UserType';
 
-export type {UserType};
+export type {UserType, RequestsType};

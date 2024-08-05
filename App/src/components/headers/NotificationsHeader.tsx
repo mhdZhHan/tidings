@@ -1,4 +1,4 @@
-import {View, Text, StyleSheet, TouchableOpacity, Image} from 'react-native';
+import {View, Text, StyleSheet, TouchableOpacity} from 'react-native';
 import {useNavigation} from '@react-navigation/native';
 
 import FontAwesome6 from 'react-native-vector-icons/FontAwesome6';
@@ -9,7 +9,7 @@ import type {MainStackParamList} from '../../navigation/types';
 
 type MainStackNavigationProp = NativeStackNavigationProp<MainStackParamList>;
 
-const UsersHeader = () => {
+const NotificationsHeader = () => {
   const navigation = useNavigation<MainStackNavigationProp>();
 
   return (
@@ -25,28 +25,14 @@ const UsersHeader = () => {
         </TouchableOpacity>
 
         <Text style={{fontSize: 18, fontWeight: '900', color: '#000'}}>
-          Mohammed
+          Notifications
         </Text>
-      </View>
-
-      <View style={{flex: 1, alignItems: 'flex-end'}}>
-        <TouchableOpacity activeOpacity={0.5}>
-          <Image
-            source={require('../../assets/character.jpg')}
-            resizeMode="cover"
-            style={{
-              width: 40,
-              height: 40,
-              borderRadius: 999,
-            }}
-          />
-        </TouchableOpacity>
       </View>
     </View>
   );
 };
 
-export default UsersHeader;
+export default NotificationsHeader;
 
 const styles = StyleSheet.create({
   headerContainer: {
@@ -58,5 +44,6 @@ const styles = StyleSheet.create({
     height: 70,
 
     borderBottomWidth: 1,
+    borderColor: '#000',
   },
 });

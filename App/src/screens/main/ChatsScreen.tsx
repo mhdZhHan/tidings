@@ -6,7 +6,7 @@ import {
   ScrollView,
   TouchableOpacity,
 } from 'react-native';
-import ChatsHeader from '../../components/chats/ChatsHeader';
+import ChatsHeader from '../../components/headers/ChatsHeader';
 import ChatsCard from '../../components/cards/ChatsCard';
 import RequestCard from '../../components/cards/RequestCard';
 
@@ -16,20 +16,11 @@ const ChatsScreen = () => {
       <ScrollView>
         <ChatsHeader />
 
-        <View style={{flex: 1, marginVertical: 20}}>
+        <View style={{flex: 1, marginVertical: 10}}>
           <ChatsCard />
           <ChatsCard />
           <ChatsCard />
           <ChatsCard />
-        </View>
-
-        <View style={{flex: 1, marginVertical: 20}}>
-          <RequestCard />
-          <RequestCard />
-          <RequestCard />
-          <RequestCard />
-          <RequestCard />
-          <RequestCard />
         </View>
       </ScrollView>
     </SafeAreaView>

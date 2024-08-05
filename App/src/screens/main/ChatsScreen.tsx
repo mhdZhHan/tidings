@@ -27,12 +27,17 @@ const ChatsScreen = () => {
   const [refreshing, setRefreshing] = useState(false);
 
   const {userId} = useUserContext();
-  
+
   const {
     data: friends,
     isLoading,
     refetch: refetchFriends,
-  } = useFetch<UserType>(() => getFriends(userId as string));
+    error,
+  } = useFetch<UserType>(() => getFriends(userId ?? ''));
+
+  if (error) {
+    console.log('ERR', error);
+  }
 
   const onRefresh = async () => {
     setRefreshing(true);

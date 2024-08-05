@@ -1,9 +1,19 @@
 import {View, Text, StyleSheet, Image, TouchableOpacity} from 'react-native';
-const ChatCard = () => {
+
+// types
+import type {UserType} from '../../types';
+
+type ChatCardProps = {
+  item: UserType;
+};
+
+const ChatCard = ({item}: ChatCardProps) => {
   return (
     <TouchableOpacity activeOpacity={0.8} style={styles.userCard}>
       <Image
-        source={require('../../assets/avatar.jpg')}
+        source={
+          item?.image ? {uri: item.image} : require('../../assets/avatar.jpg')
+        }
         resizeMode="cover"
         style={{
           width: 50,
@@ -20,7 +30,7 @@ const ChatCard = () => {
             fontWeight: '700',
             marginBottom: 2,
           }}>
-          Mohammed
+          {item.name}
         </Text>
         <Text
           style={{
@@ -28,7 +38,7 @@ const ChatCard = () => {
             fontWeight: '500',
             color: '#333',
           }}>
-          Chat with Mohammed
+          Chat with {item.name}
         </Text>
       </View>
     </TouchableOpacity>

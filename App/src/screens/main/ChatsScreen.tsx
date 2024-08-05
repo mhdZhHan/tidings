@@ -1,28 +1,60 @@
 import {
   View,
-  Text,
   SafeAreaView,
   StyleSheet,
   ScrollView,
-  TouchableOpacity,
+  FlatList,
+  Text,
+  RefreshControl,
 } from 'react-native';
+
+// components
 import ChatsHeader from '../../components/headers/ChatsHeader';
 import ChatsCard from '../../components/cards/ChatsCard';
-import RequestCard from '../../components/cards/RequestCard';
+
+// contexts
+import {useUserContext} from '../../contexts/UserContext';
+
+// hooks & lib
+import {useFetch} from '../../hooks/useFetch';
+import {getFriends} from '../../lib/apiClient';
+
+// types
+import type {UserType} from '../../types';
+import {useState} from 'react';
 
 const ChatsScreen = () => {
+  const [refreshing, setRefreshing] = useState(false);
+
+  const {userId} = useUserContext();
+  const {
+    data: friends,
+    isLoading,
+    refetch: refetchFriends,
+  } = useFetch<UserType>(() => getFriends(userId as string));
+
+  const onRefresh = async () => {
+    setRefreshing(true);
+    await refetchFriends();
+    setRefreshing(false);
+  };
+
   return (
     <SafeAreaView style={styles.container}>
-      <ScrollView>
-        <ChatsHeader />
-
-        <View style={{flex: 1, marginVertical: 10}}>
-          <ChatsCard />
-          <ChatsCard />
-          <ChatsCard />
-          <ChatsCard />
-        </View>
-      </ScrollView>
+      <FlatList
+        data={friends}
+        keyExtractor={item => item._id as string}
+        ListHeaderComponent={<ChatsHeader />}
+        refreshControl={
+          <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+        }
+        ListEmptyComponent={
+          <View style={{flex: 1, marginVertical: 20}}>
+            <Text>No friends found</Text>
+          </View>
+        }
+        renderItem={({item}) => <ChatsCard item={item} />}
+      />
     </SafeAreaView>
   );
 };

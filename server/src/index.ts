@@ -300,3 +300,42 @@ app.post("/accept-request", async (req: Request, res: Response) => {
 		res.status(500).json({ message: "Error getting request", error: error })
 	}
 })
+
+/**
+ * GET /user/:userId
+ *
+ * This route retrieves the friends of a specific user based on their user ID.
+ * When a GET request is made to this endpoint, it fetches the user's friends' data including their name, email, and image.
+ *
+ * Request Params:
+ * - userId: The ID of the user whose friends are to be retrieved.
+ *
+ * Response:
+ * - 200: An array of user objects representing the friends of the user with the specified userId.
+ * - 500: An error message indicating a server error occurred while fetching the user's friends.
+ */
+
+app.get("/user/:userId", async (req: Request, res: Response) => {
+	try {
+		const userId = req.params.userId
+
+		// Find the user by ID and populate the friends field, selecting only name, email, and image fields of friends
+		const userFriends = await User.findById(userId).populate(
+			"friends",
+			"name, email, image"
+		)
+
+		res.status(200).json(userFriends?.friends)
+	} catch (error) {
+		console.log("Error getting request", error)
+
+		if (error instanceof Error) {
+			res.status(500).json({
+				message: "Error getting request",
+				error: error.message,
+			})
+		} else {
+			res.status(500).json({ message: "Unknown error occurred" })
+		}
+	}
+})

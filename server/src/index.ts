@@ -314,18 +314,17 @@ app.post("/accept-request", async (req: Request, res: Response) => {
  * - 200: An array of user objects representing the friends of the user with the specified userId.
  * - 500: An error message indicating a server error occurred while fetching the user's friends.
  */
-
 app.get("/user/:userId", async (req: Request, res: Response) => {
 	try {
 		const userId = req.params.userId
 
 		// Find the user by ID and populate the friends field, selecting only name, email, and image fields of friends
-		const userFriends = await User.findById(userId).populate(
+		const user = await User.findById(userId).populate(
 			"friends",
-			"name, email, image"
+			"name email image"
 		)
 
-		res.status(200).json(userFriends?.friends)
+		res.status(200).json(user?.friends)
 	} catch (error) {
 		console.log("Error getting request", error)
 

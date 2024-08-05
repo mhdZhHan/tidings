@@ -120,6 +120,17 @@ export const acceptFriendRequests = async (
   }
 };
 
+// API call: get friends
+export const getFriends = async (userId: string) => {
+  try {
+    const response = await apiClient.get(`/user/${userId}`);
+    return response.data;
+  } catch (error) {
+    console.error('Error fetching users:', error);
+    throw error;
+  }
+};
+
 // API call: Logout
 export const logout = () => {
   setAuthToken(null);

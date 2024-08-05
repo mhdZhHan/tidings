@@ -4,6 +4,7 @@ import bodyParser from "body-parser"
 import "dotenv/config"
 
 import Server from "./server"
+import SocketServer from "./socket"
 
 const app: Express = express()
 
@@ -15,6 +16,8 @@ app.use(bodyParser.json())
 
 // start server
 Server.startServer(app)
+// init socket
+SocketServer.initSocketServer(app)
 
 /**
  *  ======================================================================

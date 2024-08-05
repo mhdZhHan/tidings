@@ -27,6 +27,7 @@ const ChatsScreen = () => {
   const [refreshing, setRefreshing] = useState(false);
 
   const {userId} = useUserContext();
+  
   const {
     data: friends,
     isLoading,

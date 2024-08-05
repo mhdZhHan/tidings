@@ -46,6 +46,7 @@ export const UserContextProvider = ({children}: userContextProviderProps) => {
         setUserId(decodedUserId.userId);
         break;
       case 'LOGOUT':
+        await AsyncStorage.removeItem('authToken');
         setUserId(null);
         setAccessToken(null);
         break;
@@ -56,9 +57,15 @@ export const UserContextProvider = ({children}: userContextProviderProps) => {
     const getUser = async () => {
       const token = await AsyncStorage.getItem('authToken');
       if (token) {
-        setAccessToken(token);
-        const decodedUserId: {userId: string} = jwtDecode(token);
-        setUserId(decodedUserId.userId);
+        try {
+          const decodedUserId: {userId: string} = jwtDecode(token);
+          setAccessToken(token);
+          setUserId(decodedUserId.userId);
+        } catch (error) {
+          console.error('Failed to decode token:', error);
+          setUserId(null);
+          setAccessToken(null);
+        }
       }
     };
 

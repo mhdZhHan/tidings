@@ -111,7 +111,7 @@ const Navigator = () => {
 
   return (
     <NavigationContainer>
-      {accessToken !== null ? <MainStackNavigator /> : <AuthStackNavigator />}
+      {accessToken ? <MainStackNavigator /> : <AuthStackNavigator />}
     </NavigationContainer>
   );
 };

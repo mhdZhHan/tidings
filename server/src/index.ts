@@ -330,10 +330,65 @@ app.get("/user/:userId", async (req: Request, res: Response) => {
 		res.status(200).json(user?.friends)
 	} catch (error) {
 		console.log("Error getting request", error)
+	}
+})
 
+import { userSocketMap, io } from "./socket"
+
+app.post("/send-message", async (req: Request, res: Response) => {
+	try {
+		const { senderId, receiverId, message } = req.body
+
+		const newMessage = new Message({
+			senderId,
+			receiverId,
+			message,
+		})
+
+		await newMessage.save()
+
+		const receiverSocketId = userSocketMap[receiverId]
+
+		if (receiverSocketId) {
+			console.log(
+				"Emitting receive message event to the receiver",
+				receiverId
+			)
+
+			io.to(receiverSocketId).emit("newMessage", newMessage)
+		} else {
+			console.log("Receiver socket id not found")
+		}
+
+		res.status(201).json(newMessage)
+	} catch (error) {
 		if (error instanceof Error) {
 			res.status(500).json({
-				message: "Error getting request",
+				message: "Error sending message",
+				error: error.message,
+			})
+		} else {
+			res.status(500).json({ message: "Unknown error occurred" })
+		}
+	}
+})
+
+app.get("/message", async (req: Request, res: Response) => {
+	try {
+		const { senderId, receiverId } = req.params
+
+		const messages = await Message.find({
+			$or: [
+				{ senderId: senderId, receiverId: receiverId },
+				{ senderId: receiverId, receiverId: senderId },
+			],
+		}).populate("senderId", "_id name")
+
+		res.status(200).json(messages)
+	} catch (error) {
+		if (error instanceof Error) {
+			res.status(500).json({
+				message: "Error sending message",
 				error: error.message,
 			})
 		} else {

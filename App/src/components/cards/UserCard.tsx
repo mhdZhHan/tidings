@@ -55,7 +55,7 @@ const UserCard = ({item}: UserCardProps) => {
       </View>
 
       <RectButton
-        text="Chat"
+        text="Chat Request"
         onPress={() =>
           navigation.navigate('ChatRoom', {
             name: item?.name as string,

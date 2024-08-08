@@ -7,6 +7,7 @@ export type MainStackParamList = {
   BottomTabs: undefined;
   Users: undefined;
   Notifications: undefined;
+  RequestChatRoom: {name: string; receiverId: string; image: string};
   ChatRoom: {name: string; receiverId: string; image: string};
 };
 

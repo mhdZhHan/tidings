@@ -1,15 +1,34 @@
 import {View, Text, StyleSheet, Image, TouchableOpacity} from 'react-native';
+import {useNavigation} from '@react-navigation/native';
 
 // types
+import type {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import type {UserType} from '../../types';
+import type {MainStackParamList} from '../../navigation/types';
 
 type ChatCardProps = {
   item: UserType;
 };
 
+type NavigationType = NativeStackNavigationProp<
+  MainStackParamList,
+  'RequestChatRoom'
+>;
+
 const ChatCard = ({item}: ChatCardProps) => {
+  const navigation = useNavigation<NavigationType>();
+
   return (
-    <TouchableOpacity activeOpacity={0.8} style={styles.userCard}>
+    <TouchableOpacity
+      activeOpacity={0.8}
+      style={styles.userCard}
+      onPress={() =>
+        navigation.navigate('RequestChatRoom', {
+          name: item?.name ?? '',
+          image: item?.image ?? '',
+          receiverId: item?._id ?? '',
+        })
+      }>
       <Image
         source={
           item?.image ? {uri: item.image} : require('../../assets/avatar.jpg')

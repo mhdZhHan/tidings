@@ -38,5 +38,5 @@ export const useFetch = <T>(fn: () => Promise<T[]>) => {
 
   const refetch = () => fetchData();
 
-  return {data, isLoading, error, refetch};
+  return {data, isLoading, error, refetch, setData};
 };

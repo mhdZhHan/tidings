@@ -21,9 +21,9 @@ const ChatCard = ({item}: ChatCardProps) => {
       style={styles.userCard}
       onPress={() =>
         navigation.navigate('ChatRoom', {
-          name: item?.name ?? '',
-          image: item?.image ?? '',
-          receiverId: item?._id ?? '',
+          name: item?.name as string,
+          image: item?.image as string,
+          receiverId: item?._id as string,
         })
       }>
       <Image

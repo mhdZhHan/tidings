@@ -1,4 +1,4 @@
-import {useState, useLayoutEffect} from 'react';
+import {useState, useLayoutEffect, useEffect} from 'react';
 import {
   StyleSheet,
   Text,
@@ -8,6 +8,8 @@ import {
   ScrollView,
   View,
   TextInput,
+  RefreshControl,
+  Pressable,
 } from 'react-native';
 
 import FontAwesome6 from 'react-native-vector-icons/FontAwesome6';
@@ -20,13 +22,17 @@ import {useUserContext} from '../../contexts/UserContext';
 import {useSocket} from '../../contexts/SocketContext';
 
 // lib
-import {sendMessage} from '../../lib/apiClient';
+import {fetchMessages, sendMessage} from '../../lib/apiClient';
+
+// hooks
+import {useFetch} from '../../hooks/useFetch';
 
 // types
 import type {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import {RouteProp} from '@react-navigation/native';
 import type {MainStackParamList} from '../../navigation/types';
 import {Alert} from 'react-native';
+import {MessageType} from '../../types';
 
 type ChatRoomProps = {
   navigation: NativeStackNavigationProp<MainStackParamList, 'ChatRoom'>;
@@ -35,10 +41,41 @@ type ChatRoomProps = {
 
 const ChatRoom = ({navigation, route}: ChatRoomProps) => {
   const [message, setMessage] = useState('');
-  const {accessToken, userId} = useUserContext();
+  const [refreshing, setRefreshing] = useState(false);
+  const {userId} = useUserContext();
   const {socket} = useSocket();
 
   const {name: receiverName, receiverId, image} = route.params;
+
+  const {
+    data: messages,
+    isLoading,
+    refetch: refetchMessages,
+    setData: setMessages,
+  } = useFetch<MessageType>(() =>
+    fetchMessages({senderId: userId as string, receiverId}),
+  );
+
+  const onRefresh = async () => {
+    setRefreshing(true);
+    await refetchMessages();
+    setRefreshing(false);
+  };
+
+  const listenMessages = () => {
+    useEffect(() => {
+      socket?.on('newMessage', newMessage => {
+        newMessage.shouldShake = true;
+        setMessages([...messages, newMessage]);
+      });
+
+      return () => {
+        socket?.off('newMessage');
+      };
+    }, [socket, messages, setMessages]);
+  };
+
+  listenMessages();
 
   const handleSendMessage = async () => {
     try {
@@ -58,6 +95,14 @@ const ChatRoom = ({navigation, route}: ChatRoomProps) => {
     } finally {
       setMessage('');
     }
+  };
+
+  const formatTime = (timestamp: string): string => {
+    const options: Intl.DateTimeFormatOptions = {
+      hour: 'numeric',
+      minute: 'numeric',
+    };
+    return new Date(timestamp).toLocaleString('en-US', options);
   };
 
   useLayoutEffect(() => {
@@ -105,7 +150,36 @@ const ChatRoom = ({navigation, route}: ChatRoomProps) => {
 
   return (
     <KeyboardAvoidingView style={styles.container}>
-      <ScrollView></ScrollView>
+      <ScrollView>
+        <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+        {messages.map((message, index) => (
+          <Pressable
+            key={message._id}
+            style={[
+              message.senderId._id === userId
+                ? {alignSelf: 'flex-end', backgroundColor: '#000'}
+                : {alignSelf: 'flex-start', backgroundColor: '#6D767E'},
+
+              {
+                paddingRight: 16,
+                paddingLeft: 8,
+                marginTop: 8,
+                marginBottom: 4,
+                maxWidth: '60%',
+                borderRadius: 7,
+                margin: 10,
+
+                flexDirection: 'row',
+                gap: 2,
+              },
+            ]}>
+            <Text style={{color: '#fff', fontSize: 16}}>{message.message}</Text>
+            <Text style={{color: '#fff', marginTop: 10}}>
+              {formatTime(message.timeStamp)}
+            </Text>
+          </Pressable>
+        ))}
+      </ScrollView>
 
       <View style={styles.chatOption}>
         <TouchableOpacity activeOpacity={0.5}>

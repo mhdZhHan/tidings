@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 // types
-import type {UserType} from '../types';
+import type {RequestsType, UserType} from '../types';
 
 // Axios instance
 const apiClient = axios.create({
@@ -87,18 +87,20 @@ export const sendChatRequest = async ({
     });
     return {status: response.status};
   } catch (error) {
-    console.error('Error fetching users:', error);
+    console.error('Error sending request', error);
     throw error;
   }
 };
 
 // API call: get friend request
-export const getFriendRequests = async (userId: string) => {
+export const getFriendRequests = async (
+  userId: string,
+): Promise<RequestsType[]> => {
   try {
     const response = await apiClient.get(`/get-requests/${userId}`);
     return response.data;
   } catch (error) {
-    console.error('Error fetching users:', error);
+    console.error('Error fetching friend requests:', error);
     throw error;
   }
 };
@@ -115,7 +117,7 @@ export const acceptFriendRequests = async (
     });
     return {status: response.status};
   } catch (error) {
-    console.error('Error fetching users:', error);
+    console.error('Error accept request:', error);
     throw error;
   }
 };
@@ -126,7 +128,7 @@ export const getFriends = async (userId: string) => {
     const response = await apiClient.get(`/user/${userId}`);
     return response.data;
   } catch (error) {
-    console.error('Error fetching users:', error);
+    console.error('Error fetching friend users:', error);
     throw error;
   }
 };
@@ -150,7 +152,27 @@ export const sendMessage = async ({
 
     return response.data;
   } catch (error) {
-    console.error('Error fetching users:', error);
+    console.error('Error sending message:', error);
+    throw error;
+  }
+};
+
+// API call: get fetch messages
+export const fetchMessages = async ({
+  senderId,
+  receiverId,
+}: {
+  senderId: string;
+  receiverId: string;
+}) => {
+  try {
+    const response = await apiClient.get('/messages', {
+      params: {senderId, receiverId},
+    });
+
+    return response.data;
+  } catch (error) {
+    console.error('Error fetching messages:', error);
     throw error;
   }
 };

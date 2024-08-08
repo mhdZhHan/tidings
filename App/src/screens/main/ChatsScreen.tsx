@@ -33,7 +33,7 @@ const ChatsScreen = () => {
     isLoading,
     refetch: refetchFriends,
     error,
-  } = useFetch<UserType>(() => getFriends(userId ?? ''));
+  } = useFetch<UserType>(() => getFriends(userId as string));
 
   if (error) {
     console.log('ERR', error);

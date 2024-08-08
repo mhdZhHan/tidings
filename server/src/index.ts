@@ -373,9 +373,9 @@ app.post("/send-message", async (req: Request, res: Response) => {
 	}
 })
 
-app.get("/message", async (req: Request, res: Response) => {
+app.get("/messages", async (req: Request, res: Response) => {
 	try {
-		const { senderId, receiverId } = req.params
+		const { senderId, receiverId } = req.query
 
 		const messages = await Message.find({
 			$or: [
@@ -388,7 +388,7 @@ app.get("/message", async (req: Request, res: Response) => {
 	} catch (error) {
 		if (error instanceof Error) {
 			res.status(500).json({
-				message: "Error sending message",
+				message: "Error getting messages",
 				error: error.message,
 			})
 		} else {

@@ -131,6 +131,30 @@ export const getFriends = async (userId: string) => {
   }
 };
 
+// API call: post sending message
+export const sendMessage = async ({
+  senderId,
+  receiverId,
+  message,
+}: {
+  senderId: string;
+  receiverId: string;
+  message: string;
+}) => {
+  try {
+    const response = await apiClient.post('/send-message', {
+      senderId,
+      receiverId,
+      message,
+    });
+
+    return response.data;
+  } catch (error) {
+    console.error('Error fetching users:', error);
+    throw error;
+  }
+};
+
 // API call: Logout
 export const logout = () => {
   setAuthToken(null);

@@ -10,10 +10,7 @@ type ChatCardProps = {
   item: UserType;
 };
 
-type NavigationType = NativeStackNavigationProp<
-  MainStackParamList,
-  'RequestChatRoom'
->;
+type NavigationType = NativeStackNavigationProp<MainStackParamList, 'ChatRoom'>;
 
 const ChatCard = ({item}: ChatCardProps) => {
   const navigation = useNavigation<NavigationType>();
@@ -23,7 +20,7 @@ const ChatCard = ({item}: ChatCardProps) => {
       activeOpacity={0.8}
       style={styles.userCard}
       onPress={() =>
-        navigation.navigate('RequestChatRoom', {
+        navigation.navigate('ChatRoom', {
           name: item?.name ?? '',
           image: item?.image ?? '',
           receiverId: item?._id ?? '',

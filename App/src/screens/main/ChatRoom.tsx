@@ -17,9 +17,10 @@ import Feather from 'react-native-vector-icons/Feather';
 
 // contexts
 import {useUserContext} from '../../contexts/UserContext';
+import {useSocket} from '../../contexts/SocketContext';
 
 // lib
-import {sendChatRequest} from '../../lib/apiClient';
+import {sendMessage} from '../../lib/apiClient';
 
 // types
 import type {NativeStackNavigationProp} from '@react-navigation/native-stack';
@@ -35,8 +36,29 @@ type ChatRoomProps = {
 const ChatRoom = ({navigation, route}: ChatRoomProps) => {
   const [message, setMessage] = useState('');
   const {accessToken, userId} = useUserContext();
+  const {socket} = useSocket();
 
   const {name: receiverName, receiverId, image} = route.params;
+
+  const handleSendMessage = async () => {
+    try {
+      if (!userId || !receiverId || !message.length) {
+        return Alert.alert('Something went wrong', 'Please try again');
+      }
+
+      const response = await sendMessage({
+        senderId: userId,
+        message: message,
+        receiverId: receiverId,
+      });
+
+      socket?.emit('sendMessage', {userId, receiverId, message});
+    } catch (error) {
+      Alert.alert('Error sending message', error as string);
+    } finally {
+      setMessage('');
+    }
+  };
 
   useLayoutEffect(() => {
     return navigation.setOptions({
@@ -81,26 +103,6 @@ const ChatRoom = ({navigation, route}: ChatRoomProps) => {
     });
   }, []);
 
-  const handleSend = async () => {
-    if (!userId || !receiverId || !message.length) {
-      return Alert.alert('Something went wrong', 'Please try again');
-    }
-
-    const {status} = await sendChatRequest({
-      userId: userId,
-      message: message,
-      receiverId: receiverId,
-    });
-
-    if (status === 200) {
-      setMessage('');
-      return Alert.alert(
-        'Chat Request Sent',
-        `Your chat request has been sent to ${receiverName}. Please wait for them to accept.`,
-      );
-    }
-  };
-
   return (
     <KeyboardAvoidingView style={styles.container}>
       <ScrollView></ScrollView>
@@ -131,7 +133,7 @@ const ChatRoom = ({navigation, route}: ChatRoomProps) => {
 
         <TouchableOpacity
           activeOpacity={0.5}
-          onPress={handleSend}
+          onPress={handleSendMessage}
           style={{
             backgroundColor: '#000',
             paddingHorizontal: 12,

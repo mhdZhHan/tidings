@@ -57,7 +57,7 @@ const UserCard = ({item}: UserCardProps) => {
       <RectButton
         text="Chat Request"
         onPress={() =>
-          navigation.navigate('ChatRoom', {
+          navigation.navigate('RequestChatRoom', {
             name: item?.name as string,
             receiverId: item?._id as string,
             image: item?.image as string,
